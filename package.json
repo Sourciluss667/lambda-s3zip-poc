@@ -1,0 +1,28 @@
+{
+  "name": "s3zip-lambda-ts",
+  "version": "1.0.0",
+  "description": "lambda to zip files on s3",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "build:lambda": "tsc && zip -r dist.zip package.json node_modules/ dist/",
+    "start": "node dist/index.js"
+  },
+  "keywords": [
+    "lambda",
+    "s3",
+    "zip",
+    "files"
+  ],
+  "author": "Sourciluss667",
+  "license": "ISC",
+  "dependencies": {
+    "archiver": "^5.3.1",
+    "aws-sdk": "^2.1195.0"
+  },
+  "devDependencies": {
+    "@types/archiver": "^5.3.1",
+    "@types/node": "^18.7.5"
+  }
+}
