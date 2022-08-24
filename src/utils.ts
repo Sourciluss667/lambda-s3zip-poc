@@ -4,11 +4,12 @@ import stream from 'stream';
 
 import { UPLOAD_BUCKET_NAME } from "./constants";
 import { S3ZipEvent, Result, File } from "./interfaces";
+import { SQSEvent } from 'aws-lambda';
 
 // Uncomment this when you launch in local
 // AWS.config.update({
 //   region: 'eu-west-3',
-//   credentials: new AWS.Credentials('AKIARVHUEGZ57TKQIV6R', 'UdkAhb/cQFV/e8ymX0OrA1dWfJAIFPuxySk0ez18'),
+//   credentials: new AWS.Credentials('key', 'secret'),
 // });
 
 const S3 = new AWS.S3({
@@ -30,11 +31,15 @@ export const result = (code: number, message: string): Result => {
   }
 }
 
-export const validation = (event: S3ZipEvent): {
+export const validation = (event: SQSEvent): {
   valid: boolean;
   result?: Result;
 } => {
-  const { files } = event;
+  if (event.Records.length > 1) return { valid: false, result: result(400, 'Need only one event') };
+
+  const body: S3ZipEvent = JSON.parse(event.Records[0].body);
+  console.log(body);
+  const { files } = body;
 
   if (files.length == 0) {
     console.log('No files to zip');
